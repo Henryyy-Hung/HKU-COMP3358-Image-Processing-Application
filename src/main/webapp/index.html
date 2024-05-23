@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processor</title>
+    <style>
+
+        html {
+            font-family: Arial, sans-serif;
+            min-height: 100%;
+            width: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #eae5c9 10%, #6cc6cb 100%);
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 16px 40px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 32px;
+            min-height: 30px;
+            max-width: 75%;
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 32px;
+            gap: 32px;
+            border-radius: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+            margin-bottom: 32px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 16px 32px;
+        }
+
+
+        #uploadForm {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        #imageInput {
+            margin-right: 16px;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgb(175,190,187);
+            background-color: #fff;
+        }
+
+        #imageSubmitButton {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: 1px solid rgb(175,190,187);
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        #imageSubmitButton:hover {
+            background-color: #f0f0f0;
+        }
+
+        #imageSubmitButton:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        #images-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        #images-container > div {
+            max-width: 50%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        #images-container > div > h2 {
+            text-align: center;
+        }
+
+        #images-container > div > img {
+            max-width: 100%;
+            min-height: 200px;
+            max-height: 200px;
+            height: auto;
+            object-fit: fill;
+            border: 2px solid rgb(175,190,187);
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Image Processor</h1>
+    <h2>Resize Your Picture to 512 x 512</h2>
+    <h4>UID: 3035782750</h4>
+</div>
+
+<div class="main">
+
+    <form id="uploadForm" enctype="multipart/form-data" method="post">
+        <input type="file" id="imageInput" name="image" accept="image/*" required>
+        <button type="submit" id="imageSubmitButton">Process Now !!!</button>
+    </form>
+
+    <div id="images-container">
+        <div>
+            <h2>Original Image</h2>
+            <img id="originalImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Original Image">
+        </div>
+        <div>
+            <h2>Processed Image</h2>
+            <img id="processedImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Processed Image">
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    <h5>© 2024 COMP3358 Assignment 4</h5>
+</div>
+
+<script>
+    // when select image, update the original image in the page
+    document.getElementById('imageInput').addEventListener('change', function(event) {
+        const imageFile = event.target.files[0];
+        const originalImageElement = document.getElementById('originalImage');
+        const processedImageElement = document.getElementById('processedImage');
+        originalImageElement.src = URL.createObjectURL(imageFile);
+        processedImageElement.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+
+        event.preventDefault();
+
+        const imageSubmitButton = document.getElementById('imageSubmitButton');
+        const originalImageElement = document.getElementById('originalImage');
+        const processedImageElement = document.getElementById('processedImage');
+
+        imageSubmitButton.disabled = true;
+
+        const formData = new FormData();
+        const imageFile = document.getElementById('imageInput').files[0];
+        formData.append('image', imageFile);
+
+        // Display the original image & show loading spinner
+        originalImageElement.src = URL.createObjectURL(imageFile);
+        processedImageElement.src = "data:image/svg+xml;base64,77u/PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyMDAgMjAwJz48cmFkaWFsR3JhZGllbnQgaWQ9J2ExMicgY3g9Jy42NicgZng9Jy42NicgY3k9Jy4zMTI1JyBmeT0nLjMxMjUnIGdyYWRpZW50VHJhbnNmb3JtPSdzY2FsZSgxLjUpJz48c3RvcCBvZmZzZXQ9JzAnIHN0b3AtY29sb3I9JyMwMDAwMDAnPjwvc3RvcD48c3RvcCBvZmZzZXQ9Jy4zJyBzdG9wLWNvbG9yPScjMDAwMDAwJyBzdG9wLW9wYWNpdHk9Jy45Jz48L3N0b3A+PHN0b3Agb2Zmc2V0PScuNicgc3RvcC1jb2xvcj0nIzAwMDAwMCcgc3RvcC1vcGFjaXR5PScuNic+PC9zdG9wPjxzdG9wIG9mZnNldD0nLjgnIHN0b3AtY29sb3I9JyMwMDAwMDAnIHN0b3Atb3BhY2l0eT0nLjMnPjwvc3RvcD48c3RvcCBvZmZzZXQ9JzEnIHN0b3AtY29sb3I9JyMwMDAwMDAnIHN0b3Atb3BhY2l0eT0nMCc+PC9zdG9wPjwvcmFkaWFsR3JhZGllbnQ+PGNpcmNsZSB0cmFuc2Zvcm0tb3JpZ2luPSdjZW50ZXInIGZpbGw9J25vbmUnIHN0cm9rZT0ndXJsKCNhMTIpJyBzdHJva2Utd2lkdGg9JzE0JyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1kYXNoYXJyYXk9JzIwMCAxMDAwJyBzdHJva2UtZGFzaG9mZnNldD0nMCcgY3g9JzEwMCcgY3k9JzEwMCcgcj0nNzAnPjxhbmltYXRlVHJhbnNmb3JtIHR5cGU9J3JvdGF0ZScgYXR0cmlidXRlTmFtZT0ndHJhbnNmb3JtJyBjYWxjTW9kZT0nc3BsaW5lJyBkdXI9JzInIHZhbHVlcz0nMzYwOzAnIGtleVRpbWVzPScwOzEnIGtleVNwbGluZXM9JzAgMCAxIDEnIHJlcGVhdENvdW50PSdpbmRlZmluaXRlJz48L2FuaW1hdGVUcmFuc2Zvcm0+PC9jaXJjbGU+PGNpcmNsZSB0cmFuc2Zvcm0tb3JpZ2luPSdjZW50ZXInIGZpbGw9J25vbmUnIG9wYWNpdHk9Jy4yJyBzdHJva2U9JyMwMDAwMDAnIHN0cm9rZS13aWR0aD0nMTQnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcgY3g9JzEwMCcgY3k9JzEwMCcgcj0nNzAnPjwvY2lyY2xlPjwvc3ZnPg=="
+        // Send the image to the server
+        fetch('http://ec2-47-129-13-116.ap-southeast-1.compute.amazonaws.com:8080/MyWebApp-1.0.0/processImage', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok. ' + response.statusText);
+            }
+            return response.blob();
+        })
+        .then(processedImage => {
+            processedImageElement.src = URL.createObjectURL(processedImage);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            processedImageElement.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+            alert('Failed to process image. Please try again.');
+        })
+        .finally(() => {
+            // set the button to be enabled
+            document.getElementById('imageSubmitButton').disabled = false;
+        });
+    });
+</script>
+</body>
+</html>
