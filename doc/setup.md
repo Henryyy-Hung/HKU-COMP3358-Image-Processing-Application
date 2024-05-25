@@ -24,12 +24,6 @@
 
 **AWS S3 Bucket**, **AWS SQS Queues**, **AWS EC2 Instances**
 
-### 1.3 Technology stack
-
-- AWS SDK
-- Web Frontend
-- Java Backend
-
 ## 2. Integration with AWS SDK
 
 ### Step 1: Update build.gradle.kts
@@ -288,3 +282,8 @@ Here’s a basic example of a `systemd` service file:
     mkdir ROOT
     sudo vi /var/lib/tomcat9/webapps/ROOT/index.html
     ```
+
+## 9. Ending Notes
+
+- 都看到这了，说一句谢谢学长不过分吧，我亲爱的好学弟/学妹。`(๑*◡*๑)`
+- 这门课可真是有够难的！
